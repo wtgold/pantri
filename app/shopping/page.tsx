@@ -148,6 +148,31 @@ export default function ShoppingPage() {
           ))}
         </div>
       )}
+
+      {/* Money saving tips */}
+      <div className="mt-6 bg-green-50 border border-green-100 rounded-2xl overflow-hidden">
+        <div className="p-4">
+          <h2 className="font-semibold text-green-900 mb-3">💰 Money saving swaps</h2>
+          <div className="space-y-2">
+            {[
+              { swap: "Switch to Aldi own-brand pasta", save: "~£0.60/week", total: 2.40 },
+              { swap: "Tesco Everyday Value tinned tomatoes vs Heinz", save: "~£0.40/week", total: 1.60 },
+              { swap: "Own-brand washing up liquid vs Fairy", save: "~£0.80/week", total: 3.20 },
+              { swap: "Frozen veg instead of fresh for cooked meals", save: "~£1.50/week", total: 6.00 },
+              { swap: "Batch cook soups/stews (halves food waste)", save: "~£2.00/week", total: 8.00 },
+            ].map(s => (
+              <div key={s.swap} className="bg-white rounded-xl p-3 flex items-center justify-between">
+                <p className="text-sm text-gray-700 flex-1">{s.swap}</p>
+                <span className="text-sm font-semibold text-green-700 ml-3 shrink-0">{s.save}</span>
+              </div>
+            ))}
+          </div>
+          <div className="mt-3 pt-3 border-t border-green-100 flex justify-between">
+            <p className="text-sm font-medium text-green-900">If you adopt all swaps</p>
+            <p className="text-sm font-bold text-green-700">~£21.20/month saved</p>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

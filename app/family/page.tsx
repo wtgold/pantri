@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Users, Plus, Heart, Calendar, ShoppingCart } from "lucide-react"
 
 interface Guest {
@@ -31,7 +31,12 @@ const SAMPLE_GUESTS: Guest[] = [
 ]
 
 export default function FamilyPage() {
-  const [guests, setGuests] = useState<Guest[]>(SAMPLE_GUESTS)
+  const [guests, setGuests] = useState<Guest[]>([])
+
+  useEffect(() => {
+    const saved = localStorage.getItem("pantri_guests")
+    setGuests(saved ? JSON.parse(saved) : SAMPLE_GUESTS)
+  }, [])
   const [showAdd, setShowAdd] = useState(false)
   const [form, setForm] = useState({ name: "", relation: "", favourites: "", dietary: "", visitDate: "" })
 
@@ -44,7 +49,9 @@ export default function FamilyPage() {
       dietary: form.dietary.split(",").map(s => s.trim()).filter(Boolean),
       visitDate: form.visitDate || undefined,
     }
-    setGuests(gs => [...gs, g])
+    const next = [...guests, g]
+    setGuests(next)
+    localStorage.setItem("pantri_guests", JSON.stringify(next))
     setShowAdd(false)
     setForm({ name: "", relation: "", favourites: "", dietary: "", visitDate: "" })
   }

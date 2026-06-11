@@ -1,7 +1,7 @@
 "use client"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { ShoppingCart, UtensilsCrossed, Package, Heart, Users, Home } from "lucide-react"
+import { ShoppingCart, UtensilsCrossed, Package, Heart, Users, Home, Trophy, Apple, ScanLine } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const links = [
@@ -10,7 +10,10 @@ const links = [
   { href: "/meals", label: "Meals", icon: UtensilsCrossed },
   { href: "/shopping", label: "Shopping", icon: ShoppingCart },
   { href: "/health", label: "Health", icon: Heart },
+  { href: "/nutrition", label: "Nutrition", icon: Apple },
   { href: "/family", label: "Family", icon: Users },
+  { href: "/receipt", label: "Scan Receipt", icon: ScanLine },
+  { href: "/achievements", label: "Achievements", icon: Trophy },
 ]
 
 export function Nav() {

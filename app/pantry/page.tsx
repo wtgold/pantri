@@ -1,6 +1,6 @@
 "use client"
 import { useEffect, useState } from "react"
-import { Plus, Search, Trash2, AlertTriangle, CheckCircle, ScanLine } from "lucide-react"
+import { Plus, Search, Trash2, AlertTriangle, CheckCircle, ScanLine, Package } from "lucide-react"
 import { store, PantryItem } from "@/lib/store"
 import { lookupBarcode } from "@/lib/openfoodfacts"
 import { cn } from "@/lib/utils"
@@ -39,7 +39,7 @@ export default function PantryPage() {
     const product = await lookupBarcode(barcode.trim())
     setLoading(false)
     if (product) {
-      setFound(product)
+      setFound(product as unknown as Partial<PantryItem>)
       setForm(f => ({ ...f, name: product.name, brand: product.brand, category: product.categories[0] || "General" }))
     } else {
       alert("Product not found — fill in manually")
