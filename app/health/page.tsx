@@ -3,6 +3,8 @@ import { useState, useEffect } from "react"
 import { store, HEALTH_MODES } from "@/lib/store"
 import { CheckCircle } from "lucide-react"
 
+const card = "bg-white rounded-2xl shadow-sm ring-1 ring-black/[0.04]"
+
 const modeDetails: Record<string, { tips: string[], foods: string[], avoid: string[] }> = {
   balanced: {
     tips: ["Eat a rainbow of vegetables", "Stay hydrated — 8 glasses a day", "Limit processed foods"],
@@ -47,88 +49,96 @@ export default function HealthPage() {
   }
 
   const details = modeDetails[activeMode] || modeDetails.balanced
+  const activeModeDef = HEALTH_MODES.find(m => m.id === activeMode) || HEALTH_MODES[0]
 
   return (
-    <div className="p-6 max-w-2xl mx-auto">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Health Modes</h1>
-        <p className="text-gray-500 text-sm">Choose a mode to tailor your meal suggestions</p>
+    <div className="min-h-screen">
+      <div className="px-6 pt-8 pb-5" style={{ background: "linear-gradient(135deg, #701a75 0%, #a21caf 100%)" }}>
+        <p className="text-xs font-semibold uppercase tracking-widest text-white/40 mb-1">Personalise</p>
+        <h1 className="text-3xl font-bold text-white">Health Modes</h1>
+        <p className="text-white/60 text-sm mt-1">Tailor your meal suggestions & nutrition</p>
       </div>
 
-      {/* Mode selector */}
-      <div className="grid grid-cols-2 gap-3 mb-6">
-        {HEALTH_MODES.map(mode => (
-          <button key={mode.id} onClick={() => selectMode(mode.id)}
-            className={`p-4 rounded-2xl border text-left transition-all ${
-              activeMode === mode.id
-                ? "border-green-500 bg-green-50"
-                : "border-gray-100 bg-white hover:border-gray-200"
-            }`}>
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-xl">{mode.emoji}</span>
-              {activeMode === mode.id && <CheckCircle size={16} className="text-green-600" />}
-            </div>
-            <p className="font-semibold text-gray-900 text-sm">{mode.name}</p>
-            <p className="text-xs text-gray-500 mt-0.5">{mode.description}</p>
-          </button>
-        ))}
-      </div>
-
-      {/* Active mode detail */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-5">
-        <h2 className="font-bold text-gray-900 mb-4">
-          {HEALTH_MODES.find(m => m.id === activeMode)?.emoji} {HEALTH_MODES.find(m => m.id === activeMode)?.name} guidance
-        </h2>
-
-        <div className="mb-4">
-          <h3 className="text-sm font-semibold text-gray-700 mb-2">Tips</h3>
-          <ul className="space-y-1">
-            {details.tips.map(t => (
-              <li key={t} className="text-sm text-gray-600 flex items-start gap-2">
-                <span className="text-green-500 mt-0.5">✓</span> {t}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="mb-4">
-          <h3 className="text-sm font-semibold text-gray-700 mb-2">Eat more of</h3>
-          <div className="flex flex-wrap gap-2">
-            {details.foods.map(f => (
-              <span key={f} className="text-xs bg-green-100 text-green-700 px-2.5 py-1 rounded-full">{f}</span>
-            ))}
-          </div>
-        </div>
-
-        <div>
-          <h3 className="text-sm font-semibold text-gray-700 mb-2">Limit or avoid</h3>
-          <div className="flex flex-wrap gap-2">
-            {details.avoid.map(a => (
-              <span key={a} className="text-xs bg-red-100 text-red-700 px-2.5 py-1 rounded-full">{a}</span>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Healthy switches */}
-      <div className="mt-4 bg-blue-50 border border-blue-100 rounded-2xl p-5">
-        <h2 className="font-bold text-blue-900 mb-3">💡 Healthy switches</h2>
-        <div className="space-y-2">
-          {[
-            { from: "White bread", to: "Wholemeal or rye bread", saving: "More fibre & slower energy release" },
-            { from: "Full-fat crisps", to: "Rice cakes or nuts", saving: "Less saturated fat" },
-            { from: "Sugary cereal", to: "Porridge with fruit", saving: "Sustained energy, less sugar" },
-            { from: "Fizzy drinks", to: "Sparkling water with lemon", saving: "Zero sugar, still refreshing" },
-          ].map(s => (
-            <div key={s.from} className="bg-white rounded-xl p-3">
-              <div className="flex items-center gap-2 text-sm">
-                <span className="text-red-500 font-medium">{s.from}</span>
-                <span className="text-gray-400">→</span>
-                <span className="text-green-600 font-medium">{s.to}</span>
+      <div className="px-5 -mt-3 space-y-4 pb-8">
+        {/* Mode grid */}
+        <div className="grid grid-cols-2 gap-2.5">
+          {HEALTH_MODES.map(mode => (
+            <button key={mode.id} onClick={() => selectMode(mode.id)}
+              className={`p-4 rounded-2xl text-left transition-all shadow-sm ring-1 ${
+                activeMode === mode.id
+                  ? "ring-purple-400 bg-purple-50"
+                  : "ring-black/[0.04] bg-white hover:ring-purple-200"
+              }`}>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-2xl">{mode.emoji}</span>
+                {activeMode === mode.id && <CheckCircle size={15} className="text-purple-600" />}
               </div>
-              <p className="text-xs text-gray-500 mt-0.5">{s.saving}</p>
-            </div>
+              <p className="font-semibold text-stone-900 text-sm">{mode.name}</p>
+              <p className="text-xs text-stone-400 mt-0.5 leading-snug">{mode.description}</p>
+            </button>
           ))}
+        </div>
+
+        {/* Active mode detail */}
+        <div className={card}>
+          <div className="px-5 pt-5 pb-4 border-b border-stone-100">
+            <p className="font-bold text-stone-900 text-base">
+              {activeModeDef.emoji} {activeModeDef.name} guidance
+            </p>
+          </div>
+          <div className="p-5 space-y-5">
+            <div>
+              <p className="text-xs font-bold text-stone-400 uppercase tracking-widest mb-2">Tips</p>
+              <ul className="space-y-1.5">
+                {details.tips.map(t => (
+                  <li key={t} className="text-sm text-stone-700 flex items-start gap-2">
+                    <span className="text-green-500 mt-0.5 shrink-0">✓</span> {t}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <p className="text-xs font-bold text-stone-400 uppercase tracking-widest mb-2">Eat more of</p>
+              <div className="flex flex-wrap gap-1.5">
+                {details.foods.map(f => (
+                  <span key={f} className="text-xs font-medium bg-green-100 text-green-700 px-2.5 py-1 rounded-full">{f}</span>
+                ))}
+              </div>
+            </div>
+            <div>
+              <p className="text-xs font-bold text-stone-400 uppercase tracking-widest mb-2">Limit or avoid</p>
+              <div className="flex flex-wrap gap-1.5">
+                {details.avoid.map(a => (
+                  <span key={a} className="text-xs font-medium bg-red-100 text-red-700 px-2.5 py-1 rounded-full">{a}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Healthy switches */}
+        <div className={`${card} overflow-hidden`}>
+          <div className="px-5 pt-5 pb-4 border-b border-stone-100">
+            <p className="font-bold text-stone-900">💡 Healthy switches</p>
+            <p className="text-xs text-stone-400 mt-0.5">Small swaps, big difference</p>
+          </div>
+          <div className="p-3 space-y-2">
+            {[
+              { from: "White bread", to: "Wholemeal or rye bread", benefit: "More fibre & slower energy release" },
+              { from: "Full-fat crisps", to: "Rice cakes or nuts", benefit: "Less saturated fat" },
+              { from: "Sugary cereal", to: "Porridge with fruit", benefit: "Sustained energy, less sugar" },
+              { from: "Fizzy drinks", to: "Sparkling water with lemon", benefit: "Zero sugar, still refreshing" },
+            ].map(s => (
+              <div key={s.from} className="bg-stone-50 rounded-xl p-3">
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="font-medium text-red-500 line-through">{s.from}</span>
+                  <span className="text-stone-300">→</span>
+                  <span className="font-semibold text-green-700">{s.to}</span>
+                </div>
+                <p className="text-xs text-stone-400 mt-0.5">{s.benefit}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

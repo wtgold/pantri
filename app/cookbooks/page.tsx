@@ -139,28 +139,32 @@ export default function CookbooksPage() {
   ) ?? []
 
   return (
-    <div className="p-6 max-w-2xl mx-auto">
+    <div className="min-h-screen">
       {toast && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-green-600 text-white px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2 text-sm font-medium">
-          <CheckCircle size={16} /> {toast}
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-green-700 text-white px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2 text-sm font-semibold">
+          <CheckCircle size={15} /> {toast}
         </div>
       )}
 
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Cookbooks</h1>
-          <p className="text-gray-500 text-sm">Scan a book or browse your collection</p>
+      <div className="px-6 pt-8 pb-5" style={{ background: "linear-gradient(135deg, #3b0764 0%, #7c3aed 100%)" }}>
+        <p className="text-xs font-semibold uppercase tracking-widest text-white/40 mb-1">Your library</p>
+        <div className="flex items-end justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-white">Cookbooks</h1>
+            <p className="text-white/60 text-sm mt-1">Scan a book or browse your collection</p>
+          </div>
+          <button onClick={() => setShowScanner(true)}
+            className="flex items-center gap-1.5 text-xs font-bold px-3 py-2 bg-white/15 hover:bg-white/25 text-white rounded-xl transition-colors">
+            <ScanLine size={13} /> Scan book
+          </button>
         </div>
-        <button onClick={() => setShowScanner(true)}
-          className="bg-green-600 text-white px-3 py-2 rounded-xl text-sm font-medium flex items-center gap-1.5 hover:bg-green-700">
-          <ScanLine size={15} /> Scan book
-        </button>
       </div>
 
+      <div className="px-5 -mt-3 pb-8">
       {!selected ? (
         <>
           {/* How it works */}
-          <div className="bg-purple-50 border border-purple-100 rounded-2xl p-4 mb-5">
+          <div className="bg-purple-50 border border-purple-100 rounded-2xl p-4 mt-4 mb-4">
             <p className="font-semibold text-purple-900 mb-2">📚 How it works</p>
             <div className="space-y-1.5">
               {[
@@ -286,35 +290,36 @@ export default function CookbooksPage() {
           </div>
         </>
       )}
+      </div>
 
       {/* Scanner modal */}
       {showScanner && (
-        <div className="fixed inset-0 bg-black/40 z-50 flex items-end md:items-center justify-center p-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-sm">
-            <h2 className="text-lg font-bold mb-1">Scan a cookbook</h2>
-            <p className="text-sm text-gray-500 mb-4">Enter the ISBN from the back of the book (the number under the barcode)</p>
-            <div className="flex gap-2 mb-3">
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-end md:items-center justify-center p-4">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-2xl">
+            <h2 className="text-lg font-bold text-stone-900 mb-1">Scan a cookbook</h2>
+            <p className="text-sm text-stone-400 mb-4">Enter the ISBN from the back of the book</p>
+            <div className="flex gap-2 mb-4">
               <input value={isbn} onChange={e => setIsbn(e.target.value)}
                 placeholder="e.g. 9781509892099"
-                className="flex-1 px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-green-300" />
+                className="flex-1 px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-xl text-sm focus:outline-none focus:border-purple-400 focus:bg-white transition-colors" />
               <button onClick={scanIsbn} disabled={scanning || !isbn}
-                className="px-4 py-2.5 bg-green-600 text-white rounded-xl text-sm font-medium hover:bg-green-700 disabled:opacity-50">
+                className="px-4 py-2.5 bg-purple-600 text-white rounded-xl text-sm font-semibold hover:bg-purple-700 disabled:opacity-40 transition-colors">
                 {scanning ? "..." : "Look up"}
               </button>
             </div>
-            <p className="text-xs text-gray-400 mb-4">Or try these popular cookbooks already in our library:</p>
-            <div className="space-y-2">
+            <p className="text-xs font-medium text-stone-400 mb-3">In our library:</p>
+            <div className="space-y-1.5">
               {SAMPLE_COOKBOOKS.map(book => (
                 <button key={book.id} onClick={() => { setSelected(book.id); setShowScanner(false) }}
-                  className="w-full text-left px-3 py-2 rounded-xl hover:bg-green-50 text-sm flex items-center gap-2">
+                  className="w-full text-left px-3 py-2 rounded-xl hover:bg-purple-50 text-sm flex items-center gap-2 transition-colors">
                   <span>{book.emoji}</span>
-                  <span className="font-medium">{book.title}</span>
-                  <span className="text-gray-400">— {book.author}</span>
+                  <span className="font-semibold text-stone-900">{book.title}</span>
+                  <span className="text-stone-400 text-xs">— {book.author}</span>
                 </button>
               ))}
             </div>
             <button onClick={() => setShowScanner(false)}
-              className="mt-4 w-full py-2.5 border border-gray-200 rounded-xl text-sm font-medium">Cancel</button>
+              className="mt-4 w-full py-2.5 border border-stone-200 rounded-xl text-sm font-medium hover:bg-stone-50">Cancel</button>
           </div>
         </div>
       )}

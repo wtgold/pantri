@@ -67,29 +67,33 @@ export default function CommunityPage() {
   const filtered = filter === "All" ? posts : posts.filter(p => p.category === filter)
 
   return (
-    <div className="p-6 max-w-2xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Food Discoveries</h1>
-          <p className="text-gray-500 text-sm">What the community is trying & loving</p>
+    <div className="min-h-screen">
+      <div className="px-6 pt-8 pb-5" style={{ background: "linear-gradient(135deg, #500724 0%, #be185d 100%)" }}>
+        <p className="text-xs font-semibold uppercase tracking-widest text-white/40 mb-1">Community</p>
+        <div className="flex items-end justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-white">Food Discoveries</h1>
+            <p className="text-white/60 text-sm mt-1">What people are trying & loving</p>
+          </div>
+          <button onClick={() => setShowShare(true)}
+            className="flex items-center gap-1.5 text-xs font-bold px-3 py-2 bg-white/15 hover:bg-white/25 text-white rounded-xl transition-colors">
+            <Plus size={13} /> Share find
+          </button>
         </div>
-        <button onClick={() => setShowShare(true)}
-          className="bg-green-600 text-white px-3 py-2 rounded-xl text-sm font-medium flex items-center gap-1.5 hover:bg-green-700">
-          <Plus size={15} /> Share find
-        </button>
       </div>
 
+      <div className="px-5 -mt-3 space-y-4 pb-8">
       {/* Privacy note */}
-      <div className="bg-blue-50 border border-blue-100 rounded-xl p-3 mb-4 text-xs text-blue-700">
-        🔒 This feed only shows food & drink discoveries. Health items, hygiene products, and anything age-restricted are never shown. Sharing is always opt-in.
+      <div className="bg-blue-50 border border-blue-100 rounded-xl p-3 text-xs text-blue-700">
+        🔒 Food & drink only. Health items, hygiene products, and anything age-restricted are never shown.
       </div>
 
       {/* Category filter */}
-      <div className="flex gap-2 overflow-x-auto pb-2 mb-4 scrollbar-hide">
+      <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
         {CATEGORIES.map(cat => (
           <button key={cat} onClick={() => setFilter(cat)}
-            className={`px-3 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
-              filter === cat ? "bg-green-600 text-white" : "bg-white border border-gray-100 text-gray-600 hover:border-gray-200"
+            className={`px-3 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap transition-colors shrink-0 ${
+              filter === cat ? "bg-pink-600 text-white" : "bg-white shadow-sm ring-1 ring-black/[0.04] text-stone-500 hover:text-stone-800"
             }`}>
             {cat}
           </button>
@@ -97,9 +101,9 @@ export default function CommunityPage() {
       </div>
 
       {/* Posts */}
-      <div className="space-y-4">
+      <div className="space-y-3">
         {filtered.map(post => (
-          <div key={post.id} className="bg-white rounded-2xl border border-gray-100 p-4">
+          <div key={post.id} className="bg-white rounded-2xl shadow-sm ring-1 ring-black/[0.04] p-4">
             {/* Header */}
             <div className="flex items-center gap-2 mb-3">
               <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center text-green-700 font-bold text-sm">
@@ -162,32 +166,33 @@ export default function CommunityPage() {
           </div>
         ))}
       </div>
+      </div>
 
       {/* Share modal */}
       {showShare && (
-        <div className="fixed inset-0 bg-black/40 z-50 flex items-end md:items-center justify-center p-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md">
-            <h2 className="text-lg font-bold mb-1">Share a food discovery</h2>
-            <p className="text-sm text-gray-500 mb-4">Only food & drink — no health, hygiene or restricted products.</p>
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-end md:items-center justify-center p-4">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl">
+            <h2 className="text-lg font-bold text-stone-900 mb-1">Share a food discovery</h2>
+            <p className="text-sm text-stone-400 mb-4">Food & drink only — no health, hygiene or restricted products.</p>
             <div className="space-y-3">
               <input value={newPost.item} onChange={e => setNewPost(p => ({ ...p, item: e.target.value }))}
                 placeholder="Product name *"
-                className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-green-300" />
+                className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-xl text-sm focus:outline-none focus:border-pink-400 focus:bg-white transition-colors" />
               <input value={newPost.brand} onChange={e => setNewPost(p => ({ ...p, brand: e.target.value }))}
                 placeholder="Brand"
-                className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-green-300" />
+                className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-xl text-sm focus:outline-none focus:border-pink-400 focus:bg-white transition-colors" />
               <select value={newPost.category} onChange={e => setNewPost(p => ({ ...p, category: e.target.value }))}
-                className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-green-300">
+                className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-xl text-sm focus:outline-none focus:border-pink-400 transition-colors">
                 {CATEGORIES.filter(c => c !== "All").map(c => <option key={c}>{c}</option>)}
               </select>
               <textarea value={newPost.note} onChange={e => setNewPost(p => ({ ...p, note: e.target.value }))}
-                placeholder="Tell the community about it — where you found it, what you thought..."
+                placeholder="Where did you find it? What did you think?"
                 rows={3}
-                className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-green-300 resize-none" />
+                className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-xl text-sm focus:outline-none focus:border-pink-400 focus:bg-white transition-colors resize-none" />
             </div>
-            <div className="flex gap-3 mt-4">
+            <div className="flex gap-3 mt-5">
               <button onClick={() => setShowShare(false)}
-                className="flex-1 py-2.5 border border-gray-200 rounded-xl text-sm font-medium">Cancel</button>
+                className="flex-1 py-2.5 border border-stone-200 rounded-xl text-sm font-medium hover:bg-stone-50">Cancel</button>
               <button onClick={() => {
                 if (!newPost.item) return
                 setPosts(ps => [{
@@ -199,7 +204,7 @@ export default function CommunityPage() {
                 setShowShare(false)
                 setNewPost({ item: "", brand: "", category: "Snacks", note: "" })
               }} disabled={!newPost.item}
-                className="flex-1 py-2.5 bg-green-600 text-white rounded-xl text-sm font-medium hover:bg-green-700 disabled:opacity-50">
+                className="flex-1 py-2.5 bg-pink-600 text-white rounded-xl text-sm font-semibold hover:bg-pink-700 disabled:opacity-40 transition-colors">
                 Share discovery
               </button>
             </div>

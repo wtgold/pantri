@@ -3,6 +3,8 @@ import { useState } from "react"
 import { Plus, Users, ShoppingCart, CheckCircle, ChevronDown, ChevronUp } from "lucide-react"
 import { store, ShoppingItem } from "@/lib/store"
 
+const card = "bg-white rounded-2xl shadow-sm ring-1 ring-black/[0.04]"
+
 interface Meal {
   name: string
   time: string
@@ -99,7 +101,7 @@ export default function MealsPage() {
       }
       store.addShoppingItem(item)
     })
-    setAddedToast(`${meal.name} ingredients added to shopping list!`)
+    setAddedToast(`${meal.name} added to shopping!`)
     setTimeout(() => setAddedToast(""), 3000)
   }
 
@@ -110,173 +112,176 @@ export default function MealsPage() {
       const meal = SUGGESTED_MEALS.find(m => m.name === mealName)
       if (meal) addIngredientsToShopping(meal)
     })
-    setAddedToast("All week's ingredients added to shopping list!")
+    setAddedToast("All week's ingredients added!")
     setTimeout(() => setAddedToast(""), 3000)
   }
 
   const plannedCount = Object.keys(rota).length
 
   return (
-    <div className="p-6 max-w-2xl mx-auto">
-      {/* Toast */}
+    <div className="min-h-screen">
       {addedToast && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-green-600 text-white px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2 text-sm font-medium">
-          <CheckCircle size={16} /> {addedToast}
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-green-700 text-white px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2 text-sm font-semibold">
+          <CheckCircle size={15} /> {addedToast}
         </div>
       )}
 
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Meal Planner</h1>
-        <p className="text-gray-500 text-sm">Plan your week, reduce waste</p>
-      </div>
-
-      {/* Servings */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-4 mb-4 flex items-center gap-3">
-        <Users size={18} className="text-gray-400" />
-        <span className="text-sm font-medium text-gray-700">Cooking for</span>
-        <div className="flex items-center gap-2 ml-auto">
-          <button onClick={() => setServings(s => Math.max(1, s - 1))}
-            className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-lg hover:bg-gray-200">−</button>
-          <span className="w-6 text-center font-semibold">{servings}</span>
-          <button onClick={() => setServings(s => s + 1)}
-            className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-lg hover:bg-gray-200">+</button>
-        </div>
-        <span className="text-sm text-gray-500">people</span>
-      </div>
-
-      {/* Weekly rota */}
-      <div className="flex items-center justify-between mb-3">
-        <h2 className="text-lg font-semibold text-gray-800">This week</h2>
-        {plannedCount > 0 && (
-          <button onClick={addWeekToShopping}
-            className="flex items-center gap-1.5 text-sm font-medium text-green-600 bg-green-50 px-3 py-1.5 rounded-xl hover:bg-green-100">
-            <ShoppingCart size={14} /> Add all to shopping
-          </button>
-        )}
-      </div>
-      <div className="space-y-2 mb-6">
-        {DAYS.map(day => {
-          const meal = SUGGESTED_MEALS.find(m => m.name === rota[day])
-          return (
-            <div key={day} className="bg-white rounded-xl border border-gray-100 p-3">
-              <div className="flex items-center gap-3">
-                <span className="text-sm font-medium text-gray-500 w-24">{day}</span>
-                {meal ? (
-                  <div className="flex-1 flex items-center gap-2">
-                    <span className="text-sm font-medium text-gray-900">{meal.emoji} {meal.name}</span>
-                    <span className="text-xs text-gray-400">(×{servings})</span>
-                  </div>
-                ) : (
-                  <span className="flex-1 text-sm text-gray-300">No meal planned</span>
-                )}
-                <div className="flex items-center gap-2">
-                  {meal && (
-                    <button onClick={() => addIngredientsToShopping(meal)}
-                      title="Add ingredients to shopping list"
-                      className="text-green-500 hover:text-green-700 p-1">
-                      <ShoppingCart size={14} />
-                    </button>
-                  )}
-                  <button onClick={() => setShowPicker(day)}
-                    className="text-xs text-green-600 font-medium hover:text-green-700 flex items-center gap-1">
-                    <Plus size={12} /> {rota[day] ? "Change" : "Add"}
-                  </button>
-                </div>
-              </div>
-            </div>
-          )
-        })}
-      </div>
-
-      {/* Meal suggestions */}
-      <h2 className="text-lg font-semibold text-gray-800 mb-1">Suggested meals</h2>
-      <p className="text-xs text-gray-400 mb-3">Based on your pantry • tap to see ingredients</p>
-      <div className="grid grid-cols-1 gap-3">
-        {[...SUGGESTED_MEALS].sort((a, b) => (parseInt(b.lastHad) || 0) - (parseInt(a.lastHad) || 0)).map(meal => (
-          <div key={meal.name} className="bg-white rounded-xl border border-gray-100 overflow-hidden">
-            <div className="p-4 flex items-start justify-between gap-3">
-              <div className="flex items-start gap-3 flex-1 min-w-0">
-                <span className="text-2xl shrink-0">{meal.emoji}</span>
-                <div className="min-w-0">
-                  <p className="font-medium text-gray-900">{meal.name}</p>
-                  <p className="text-xs text-gray-400">{meal.time} · serves {meal.servings} · last had {meal.lastHad}</p>
-                  <div className="flex gap-1 mt-1.5 flex-wrap">
-                    {meal.tags.map(t => (
-                      <span key={t} className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">{t}</span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col gap-1.5 shrink-0">
-                <button onClick={() => setShowPicker(`__${meal.name}`)}
-                  className="text-xs text-green-600 font-medium hover:text-green-700 whitespace-nowrap">
-                  Add to week
-                </button>
-                <button onClick={() => addIngredientsToShopping(meal)}
-                  className="flex items-center gap-1 text-xs text-blue-600 font-medium hover:text-blue-700 whitespace-nowrap">
-                  <ShoppingCart size={11} /> Shopping list
-                </button>
-                <button onClick={() => setExpandedMeal(expandedMeal === meal.name ? null : meal.name)}
-                  className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600">
-                  Ingredients {expandedMeal === meal.name ? <ChevronUp size={11} /> : <ChevronDown size={11} />}
-                </button>
-              </div>
-            </div>
-
-            {expandedMeal === meal.name && (
-              <div className="border-t border-gray-50 px-4 py-3 bg-gray-50">
-                <p className="text-xs font-semibold text-gray-500 mb-2">Ingredients (scaled for {servings} people):</p>
-                <div className="grid grid-cols-2 gap-1">
-                  {meal.ingredients.map(ing => {
-                    const scale = servings / meal.servings
-                    const qty = Math.ceil(parseFloat(ing.amount) * scale)
-                    return (
-                      <div key={ing.name} className="flex items-center gap-1.5 text-xs text-gray-600">
-                        <span className="w-1.5 h-1.5 bg-green-400 rounded-full shrink-0" />
-                        {qty} {ing.unit} {ing.name}
-                      </div>
-                    )
-                  })}
-                </div>
-                <button onClick={() => addIngredientsToShopping(meal)}
-                  className="mt-3 w-full py-2 bg-green-600 text-white rounded-lg text-xs font-medium hover:bg-green-700 flex items-center justify-center gap-1.5">
-                  <ShoppingCart size={13} /> Add all ingredients to shopping list
-                </button>
-              </div>
-            )}
+      <div className="px-6 pt-8 pb-5" style={{ background: "linear-gradient(135deg, #431407 0%, #c2410c 100%)" }}>
+        <p className="text-xs font-semibold uppercase tracking-widest text-white/40 mb-1">Weekly plan</p>
+        <div className="flex items-end justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-white">Meal Planner</h1>
+            <p className="text-white/60 text-sm mt-1">Plan your week, reduce waste</p>
           </div>
-        ))}
+          {plannedCount > 0 && (
+            <button onClick={addWeekToShopping}
+              className="flex items-center gap-1.5 text-xs font-bold px-3 py-2 bg-white/15 hover:bg-white/25 text-white rounded-xl transition-colors">
+              <ShoppingCart size={13} /> Add all
+            </button>
+          )}
+        </div>
       </div>
 
-      {/* Day picker modal */}
+      <div className="px-5 -mt-3 space-y-4 pb-8">
+        {/* Servings */}
+        <div className={`${card} p-4 flex items-center gap-3`}>
+          <Users size={17} className="text-stone-400" />
+          <span className="text-sm font-medium text-stone-700">Cooking for</span>
+          <div className="flex items-center gap-2 ml-auto">
+            <button onClick={() => setServings(s => Math.max(1, s - 1))}
+              className="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-lg font-bold hover:bg-stone-200 transition-colors">−</button>
+            <span className="w-7 text-center font-bold text-stone-900">{servings}</span>
+            <button onClick={() => setServings(s => s + 1)}
+              className="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-lg font-bold hover:bg-stone-200 transition-colors">+</button>
+          </div>
+          <span className="text-sm text-stone-400">people</span>
+        </div>
+
+        {/* Weekly rota */}
+        <div>
+          <p className="text-xs font-semibold text-stone-400 uppercase tracking-widest mb-3">This week</p>
+          <div className="space-y-2">
+            {DAYS.map(day => {
+              const meal = SUGGESTED_MEALS.find(m => m.name === rota[day])
+              return (
+                <div key={day} className={`${card} px-4 py-3 flex items-center gap-3`}>
+                  <span className="text-xs font-bold text-stone-400 w-20 shrink-0">{day.slice(0,3).toUpperCase()}</span>
+                  {meal ? (
+                    <div className="flex-1 flex items-center gap-2 min-w-0">
+                      <span className="text-base">{meal.emoji}</span>
+                      <span className="text-sm font-semibold text-stone-900 truncate">{meal.name}</span>
+                      <span className="text-xs text-stone-300 shrink-0">×{servings}</span>
+                    </div>
+                  ) : (
+                    <span className="flex-1 text-sm text-stone-300">No meal planned</span>
+                  )}
+                  <div className="flex items-center gap-2 shrink-0">
+                    {meal && (
+                      <button onClick={() => addIngredientsToShopping(meal)}
+                        className="text-orange-400 hover:text-orange-600 p-1 transition-colors">
+                        <ShoppingCart size={14} />
+                      </button>
+                    )}
+                    <button onClick={() => setShowPicker(day)}
+                      className="text-xs font-semibold text-orange-600 hover:text-orange-700 bg-orange-50 px-2.5 py-1 rounded-lg transition-colors">
+                      {rota[day] ? "Change" : "+ Add"}
+                    </button>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* Suggestions */}
+        <div>
+          <p className="text-xs font-semibold text-stone-400 uppercase tracking-widest mb-1">Suggested meals</p>
+          <p className="text-xs text-stone-300 mb-3">Based on your pantry · tap ingredients to expand</p>
+          <div className="space-y-2.5">
+            {[...SUGGESTED_MEALS].map(meal => (
+              <div key={meal.name} className={`${card} overflow-hidden`}>
+                <div className="p-4 flex items-start gap-3">
+                  <span className="text-2xl shrink-0">{meal.emoji}</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-stone-900 text-sm">{meal.name}</p>
+                    <p className="text-xs text-stone-400 mt-0.5">{meal.time} · serves {meal.servings} · {meal.lastHad}</p>
+                    <div className="flex gap-1 mt-2 flex-wrap">
+                      {meal.tags.map(t => (
+                        <span key={t} className="text-[11px] font-medium bg-orange-50 text-orange-600 px-2 py-0.5 rounded-full">{t}</span>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-1.5 shrink-0 items-end">
+                    <button onClick={() => setShowPicker(`__${meal.name}`)}
+                      className="text-xs font-semibold text-orange-600 bg-orange-50 px-2.5 py-1.5 rounded-lg hover:bg-orange-100 transition-colors whitespace-nowrap">
+                      Add to week
+                    </button>
+                    <button onClick={() => addIngredientsToShopping(meal)}
+                      className="flex items-center gap-1 text-xs font-semibold text-blue-600 bg-blue-50 px-2.5 py-1.5 rounded-lg hover:bg-blue-100 transition-colors whitespace-nowrap">
+                      <ShoppingCart size={11} /> To list
+                    </button>
+                    <button onClick={() => setExpandedMeal(expandedMeal === meal.name ? null : meal.name)}
+                      className="flex items-center gap-0.5 text-xs text-stone-300 hover:text-stone-500 transition-colors">
+                      Ingredients {expandedMeal === meal.name ? <ChevronUp size={11} /> : <ChevronDown size={11} />}
+                    </button>
+                  </div>
+                </div>
+
+                {expandedMeal === meal.name && (
+                  <div className="border-t border-stone-50 px-4 py-3" style={{ background: "var(--bg)" }}>
+                    <p className="text-xs font-semibold text-stone-400 mb-2">Scaled for {servings} people:</p>
+                    <div className="grid grid-cols-2 gap-1 mb-3">
+                      {meal.ingredients.map(ing => {
+                        const qty = Math.ceil(parseFloat(ing.amount) * (servings / meal.servings))
+                        return (
+                          <div key={ing.name} className="flex items-center gap-1.5 text-xs text-stone-600">
+                            <span className="w-1.5 h-1.5 bg-orange-400 rounded-full shrink-0" />
+                            {qty} {ing.unit} {ing.name}
+                          </div>
+                        )
+                      })}
+                    </div>
+                    <button onClick={() => addIngredientsToShopping(meal)}
+                      className="w-full py-2 bg-orange-600 text-white rounded-xl text-xs font-semibold hover:bg-orange-700 flex items-center justify-center gap-1.5 transition-colors">
+                      <ShoppingCart size={13} /> Add all ingredients to shopping list
+                    </button>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Picker modal */}
       {showPicker && (
-        <div className="fixed inset-0 bg-black/40 z-50 flex items-end md:items-center justify-center p-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-sm">
-            <h2 className="text-lg font-bold mb-4">
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-end md:items-center justify-center p-4">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-2xl">
+            <h2 className="text-lg font-bold text-stone-900 mb-4">
               {showPicker.startsWith("__") ? `Add ${showPicker.slice(2)} to...` : `Pick meal for ${showPicker}`}
             </h2>
             {showPicker.startsWith("__") ? (
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 {DAYS.map(day => (
                   <button key={day} onClick={() => assignMeal(day, showPicker.slice(2))}
-                    className="w-full text-left px-4 py-2.5 rounded-xl hover:bg-green-50 text-sm font-medium text-gray-700 flex items-center justify-between">
+                    className="w-full text-left px-4 py-2.5 rounded-xl hover:bg-orange-50 text-sm font-medium text-stone-700 flex items-center justify-between transition-colors">
                     {day}
-                    {rota[day] && <span className="text-xs text-gray-400">{rota[day]}</span>}
+                    {rota[day] && <span className="text-xs text-stone-300">{rota[day]}</span>}
                   </button>
                 ))}
               </div>
             ) : (
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 {SUGGESTED_MEALS.map(meal => (
                   <button key={meal.name} onClick={() => assignMeal(showPicker, meal.name)}
-                    className="w-full text-left px-4 py-2.5 rounded-xl hover:bg-green-50 text-sm font-medium text-gray-700 flex items-center gap-2">
+                    className="w-full text-left px-4 py-2.5 rounded-xl hover:bg-orange-50 text-sm font-medium text-stone-700 flex items-center gap-2 transition-colors">
                     <span>{meal.emoji}</span> {meal.name}
                   </button>
                 ))}
               </div>
             )}
             <button onClick={() => setShowPicker(null)}
-              className="mt-4 w-full py-2.5 border border-gray-200 rounded-xl text-sm font-medium hover:bg-gray-50">
+              className="mt-4 w-full py-2.5 border border-stone-200 rounded-xl text-sm font-medium hover:bg-stone-50 transition-colors">
               Cancel
             </button>
           </div>

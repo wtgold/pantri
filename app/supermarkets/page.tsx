@@ -86,14 +86,16 @@ export default function SupermarketsPage() {
   const connected = supermarkets.filter(s => s.connected)
 
   return (
-    <div className="p-6 max-w-2xl mx-auto">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Shops & Delivery</h1>
-        <p className="text-gray-500 text-sm">Connect your supermarkets to push shopping lists directly to your basket</p>
+    <div className="min-h-screen">
+      <div className="px-6 pt-8 pb-5" style={{ background: "linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%)" }}>
+        <p className="text-xs font-semibold uppercase tracking-widest text-white/40 mb-1">Connect</p>
+        <h1 className="text-3xl font-bold text-white">Shops & Delivery</h1>
+        <p className="text-white/60 text-sm mt-1">Push your shopping list straight to your basket</p>
       </div>
 
+      <div className="px-5 -mt-3 pb-8">
       {/* Tab selector */}
-      <div className="flex gap-2 mb-6 bg-gray-100 p-1 rounded-xl">
+      <div className="flex gap-2 mb-5 bg-stone-100 p-1 rounded-xl mt-4">
         <button onClick={() => setActiveTab("supermarkets")}
           className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === "supermarkets" ? "bg-white text-gray-900 shadow-sm" : "text-gray-500"}`}>
           Supermarkets
@@ -105,107 +107,99 @@ export default function SupermarketsPage() {
       </div>
 
       {activeTab === "supermarkets" && (
-        <>
-          {/* Connected banner */}
+        <div className="space-y-3">
           {connected.length > 0 && (
-            <div className="bg-green-50 border border-green-100 rounded-2xl p-4 mb-4">
-              <div className="flex items-center gap-2 mb-2">
-                <CheckCircle size={16} className="text-green-600" />
-                <span className="font-semibold text-green-900">{connected.length} supermarket{connected.length > 1 ? "s" : ""} connected</span>
+            <>
+              <div className="bg-green-50 border border-green-100 rounded-2xl p-4">
+                <div className="flex items-center gap-2 mb-1">
+                  <CheckCircle size={15} className="text-green-600" />
+                  <span className="font-bold text-green-900">{connected.length} supermarket{connected.length > 1 ? "s" : ""} connected</span>
+                </div>
+                <p className="text-sm text-green-700">Push your list to {connected.map(s => s.name).join(", ")}.</p>
               </div>
-              <p className="text-sm text-green-700">Your shopping list will be pushed to {connected.map(s => s.name).join(", ")} when ready.</p>
-            </div>
+              <button className="w-full py-3 text-white rounded-2xl font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
+                style={{ background: "var(--brand)" }}>
+                <ShoppingCart size={17} /> Push shopping list to basket
+              </button>
+            </>
           )}
 
-          {/* Push to basket CTA */}
-          {connected.length > 0 && (
-            <button className="w-full mb-4 py-3 bg-green-600 text-white rounded-2xl font-semibold flex items-center justify-center gap-2 hover:bg-green-700">
-              <ShoppingCart size={18} /> Push shopping list to basket
-            </button>
-          )}
-
-          {/* Supermarket list */}
-          <div className="space-y-3">
-            {supermarkets.map(sm => (
-              <div key={sm.id} className={`bg-white rounded-2xl border p-4 ${sm.connected ? "border-green-300" : "border-gray-100"}`}>
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <span className="text-2xl">{sm.logo}</span>
-                    <div>
-                      <p className="font-semibold text-gray-900">{sm.name}</p>
-                      {sm.connected && <p className="text-xs text-green-600">Connected ✓</p>}
-                    </div>
+          {supermarkets.map(sm => (
+            <div key={sm.id} className={`bg-white rounded-2xl p-4 shadow-sm ring-1 ${sm.connected ? "ring-green-300" : "ring-black/[0.04]"}`}>
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">{sm.logo}</span>
+                  <div>
+                    <p className="font-bold text-stone-900">{sm.name}</p>
+                    {sm.connected && <p className="text-xs font-semibold text-green-600">Connected ✓</p>}
                   </div>
-                  <button onClick={() => toggleConnect(sm.id)}
-                    className={`px-4 py-1.5 rounded-xl text-sm font-medium transition-colors ${
-                      sm.connected
-                        ? "bg-red-50 text-red-600 hover:bg-red-100"
-                        : "bg-green-600 text-white hover:bg-green-700"
-                    }`}>
-                    {sm.connected ? "Disconnect" : sm.status === "coming_soon" ? "Coming soon" : "Connect"}
-                  </button>
                 </div>
-                <div className="flex flex-wrap gap-1">
-                  {sm.features.map(f => (
-                    <span key={f} className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">{f}</span>
-                  ))}
-                </div>
+                <button onClick={() => toggleConnect(sm.id)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${
+                    sm.connected ? "bg-red-50 text-red-600 hover:bg-red-100" : "bg-stone-100 text-stone-500 hover:bg-stone-200"
+                  }`}>
+                  {sm.connected ? "Disconnect" : "Coming soon"}
+                </button>
               </div>
-            ))}
-          </div>
-
-          {/* Price comparison note */}
-          <div className="mt-4 bg-blue-50 border border-blue-100 rounded-2xl p-4">
-            <div className="flex items-center gap-2 mb-1">
-              <Zap size={16} className="text-blue-600" />
-              <span className="font-semibold text-blue-900">Price comparison — coming soon</span>
+              <div className="flex flex-wrap gap-1">
+                {sm.features.map(f => (
+                  <span key={f} className="text-[11px] font-medium bg-stone-100 text-stone-500 px-2 py-0.5 rounded-full">{f}</span>
+                ))}
+              </div>
             </div>
-            <p className="text-sm text-blue-700">Once connected, Pantri will automatically compare prices across your connected supermarkets and highlight the cheapest option for each item on your shopping list.</p>
+          ))}
+
+          <div className="bg-blue-50 border border-blue-100 rounded-2xl p-4">
+            <div className="flex items-center gap-2 mb-1">
+              <Zap size={15} className="text-blue-600" />
+              <span className="font-bold text-blue-900">Price comparison — coming soon</span>
+            </div>
+            <p className="text-sm text-blue-700">Pantri will compare your full basket across connected supermarkets and show which store is cheapest overall.</p>
           </div>
-        </>
+        </div>
       )}
 
       {activeTab === "mealkits" && (
-        <div className="space-y-4">
-          <p className="text-sm text-gray-500">Import recipes directly into your meal planner and auto-populate your shopping list.</p>
+        <div className="space-y-3 mt-1">
+          <p className="text-sm text-stone-400">Import recipes into your meal planner and auto-fill your shopping list.</p>
           {MEAL_KITS.map(kit => (
-            <div key={kit.id} className="bg-white rounded-2xl border border-gray-100 p-4">
+            <div key={kit.id} className="bg-white rounded-2xl shadow-sm ring-1 ring-black/[0.04] p-4">
               <div className="flex items-start justify-between gap-3 mb-3">
                 <div className="flex items-center gap-3">
                   <span className="text-3xl">{kit.emoji}</span>
                   <div>
-                    <p className="font-semibold text-gray-900">{kit.name}</p>
-                    <p className="text-sm text-gray-500">{kit.description}</p>
+                    <p className="font-bold text-stone-900">{kit.name}</p>
+                    <p className="text-sm text-stone-400">{kit.description}</p>
                   </div>
                 </div>
-                <div className="flex flex-col gap-1.5 shrink-0">
-                  <span className="text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded-full text-center">Coming soon</span>
+                <div className="flex flex-col gap-1.5 shrink-0 items-end">
+                  <span className="text-[11px] font-bold bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">Coming soon</span>
                   <a href={kit.url} target="_blank" rel="noopener noreferrer"
-                    className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-700">
+                    className="flex items-center gap-1 text-xs text-blue-500 hover:text-blue-700">
                     <Globe size={11} /> Visit site
                   </a>
                 </div>
               </div>
               <div className="flex flex-wrap gap-1">
                 {kit.perks.map(p => (
-                  <span key={p} className="text-xs bg-green-50 text-green-700 px-2 py-0.5 rounded-full">{p}</span>
+                  <span key={p} className="text-[11px] font-medium bg-green-50 text-green-700 px-2 py-0.5 rounded-full">{p}</span>
                 ))}
               </div>
             </div>
           ))}
 
-          {/* Influencer/PT meals teaser */}
-          <div className="bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-100 rounded-2xl p-4">
-            <p className="font-semibold text-purple-900 mb-1">🌟 Creator & PT Meals — coming soon</p>
-            <p className="text-sm text-purple-700 mb-2">Follow your favourite fitness creators and chefs. Their meal plans appear in your planner — tap to add ingredients to your basket.</p>
+          <div className="rounded-2xl p-4" style={{ background: "linear-gradient(135deg, #f5f3ff 0%, #fdf2f8 100%)", border: "1px solid #e9d5ff" }}>
+            <p className="font-bold text-purple-900 mb-1">🌟 Creator & PT Meals — coming soon</p>
+            <p className="text-sm text-purple-700 mb-3">Follow your favourite chefs and PTs. Their meal plans appear in your planner — tap to add to basket.</p>
             <div className="flex flex-wrap gap-2">
               {["Joe Wicks", "Deliciously Ella", "Jamie Oliver", "Ottolenghi"].map(c => (
-                <span key={c} className="text-xs bg-white border border-purple-200 text-purple-700 px-2.5 py-1 rounded-full">{c}</span>
+                <span key={c} className="text-xs font-semibold bg-white border border-purple-200 text-purple-700 px-2.5 py-1 rounded-full">{c}</span>
               ))}
             </div>
           </div>
         </div>
       )}
+      </div>
     </div>
   )
 }
